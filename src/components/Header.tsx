@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const { isAdmin } = useAuth();
   const [open, setOpen] = useState(false);
 
   const scrollTo = (id: string) => {
@@ -19,13 +22,18 @@ const Header = () => {
           <span className="text-xl font-bold text-foreground">.rocks</span>
         </button>
 
-        <nav className="hidden gap-6 md:flex">
+        <nav className="hidden gap-6 md:flex items-center">
           <button onClick={() => scrollTo("tools")} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Community Tools
           </button>
           <button onClick={() => scrollTo("blog")} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Blog
           </button>
+          {isAdmin && (
+            <Link to="/admin" className="text-sm text-primary transition-colors hover:text-primary/80 flex items-center gap-1">
+              <Settings className="h-3.5 w-3.5" /> Admin
+            </Link>
+          )}
         </nav>
 
         <Sheet open={open} onOpenChange={setOpen}>
