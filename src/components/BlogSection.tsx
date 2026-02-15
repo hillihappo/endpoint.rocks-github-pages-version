@@ -43,9 +43,9 @@ const BlogSection = () => {
                 rel="noopener noreferrer"
                 className="group flex flex-col rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
               >
-                <h3 className="mb-2 font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
+                <h3 className="mb-2 font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: post.title }}
+                />
                 <p className="mb-4 flex-1 text-sm text-muted-foreground line-clamp-3">
                   {post.description}
                 </p>
