@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect } from "react";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -23,6 +24,44 @@ const BlogPost = () => {
     enabled: !!slug,
   });
 
+  useEffect(() => {
+    if (!post) return;
+
+    const ogUrl = `${window.location.origin}/blog/${post.slug}`;
+
+    document.title = `${post.title} | Endpoint.rocks`;
+
+    const setMeta = (name: string, content: string, attr = "name") => {
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMeta("description", post.excerpt);
+    setMeta("og:title", post.title, "property");
+    setMeta("og:description", post.excerpt, "property");
+    setMeta("og:url", ogUrl, "property");
+    setMeta("og:type", "article", "property");
+    if (post.image_url) setMeta("og:image", post.image_url, "property");
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", post.title);
+    setMeta("twitter:description", post.excerpt);
+    if (post.image_url) setMeta("twitter:image", post.image_url);
+
+    return () => {
+      document.title = "Endpoint.rocks";
+      ["description", "twitter:card", "twitter:title", "twitter:description", "twitter:image"].forEach((n) =>
+        document.querySelector(`meta[name="${n}"]`)?.remove()
+      );
+      ["og:title", "og:description", "og:url", "og:type", "og:image"].forEach((n) =>
+        document.querySelector(`meta[property="${n}"]`)?.remove()
+      );
+    };
+  }, [post]);
   return (
     <div className="min-h-screen bg-background">
       <Header />
