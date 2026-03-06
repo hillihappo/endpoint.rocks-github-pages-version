@@ -88,7 +88,7 @@ const BlogPost = () => {
       <main className="container mx-auto px-4 py-12">
         <Link
           to="/#blog"
-          className="mb-8 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="mb-8 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors animate-fade-in"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Link>
@@ -100,7 +100,7 @@ const BlogPost = () => {
             <Skeleton className="h-96 w-full" />
           </div>
         ) : post ? (
-          <article className="mx-auto max-w-3xl">
+          <article className="mx-auto max-w-3xl animate-fade-in" style={{ animationDelay: "100ms", opacity: 0 }}>
             <h1 className="mb-4 text-3xl font-bold md:text-4xl">{post.title}</h1>
             {post.published_at && (
               <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">

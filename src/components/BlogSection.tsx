@@ -32,11 +32,12 @@ const BlogSection = () => {
           </div>
         ) : posts && posts.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
+            {posts.map((post, index) => (
               <Link
                 key={post.id}
                 to={`/blog/${post.slug}`}
-                className="group flex flex-col rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                className="group flex flex-col rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 opacity-0 animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <h3 className="mb-2 font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
                   {post.title}
