@@ -25,6 +25,10 @@ const BlogPost = () => {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
+  useEffect(() => {
     if (!post) return;
 
     const ogUrl = `${window.location.origin}/blog/${post.slug}`;
