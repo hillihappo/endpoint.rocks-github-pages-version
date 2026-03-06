@@ -1,40 +1,24 @@
 
 
-# Endpoint.rocks – Redesign
+## Förslag: Gör bloggen mer synlig och lättare att hitta
 
-## Översikt
-En modern, mörk tech-sajt som fungerar som en kuraterad katalog över community-verktyg för Microsoft Intune. Med sökfunktion, kategorifilter, databasdriven innehållshantering och bloggvisning via RSS.
+Bloggen ligger idag längst ner på startsidan, efter hela verktygskatalogen — besökare måste scrolla långt för att hitta den. Här är konkreta förbättringar:
 
----
+### 1. Lägg till en dedikerad bloggsida (`/blog`)
+- Skapa `src/pages/Blog.tsx` med Header, Footer och en liknande layout som BlogSection men som visar alla inlägg med pagination
+- Lägg till route `/blog` i `App.tsx`
 
-## 1. Design & Visuellt tema
-- **Mörkt tema** med polerad, professionell känsla – mörka bakgrunder, subtila gradienter och glödande accentfärger (gult/guld som nuvarande logotyp)
-- Responsiv design som fungerar bra på desktop, tablet och mobil
-- Snygga kort-baserade layouter för verktygen istället för dagens knappar
-- Smooth hover-animationer och övergångar
+### 2. Uppdatera navigeringen
+- Ändra "Blog"-länkarna i Header (desktop + mobil) till en riktig `Link to="/blog"` istället för att scrolla till `#blog`
+- Lägg till en "Blog"-länk i Footer
 
-## 2. Startsida / Hero
-- Hero-sektion med "Endpoint.rocks"-branding och tagline: *"Your gateway to the best community tools for Microsoft Intune"*
-- Sökfält direkt i hero-sektionen så besökare kan börja söka direkt
-- Kategori-knappar/tabs under sökfältet för snabbfiltrering
+### 3. Lyft bloggen i hero-sektionen
+- Lägg till en liten CTA-knapp eller länk under sökfältet i HeroSection, t.ex. "📝 Read the latest blog posts →" som pekar till `/blog`
 
-## 3. Verktygskatalog
-- **Sökfunktion** – Fritextsökning som filtrerar verktyg i realtid
-- **Kategorifilter** – Klickbara kategorier (Management Tools & Scripts, Solutions, Tools for Documentation, Application Management)
-- Varje verktyg visas som ett **kort** med namn, kort beskrivning och länk till GitHub/webbsida
-- Kategori-badge på varje kort
+### 4. Behåll BlogSection på startsidan som en preview
+- Visa 3 senaste inläggen med en "View all posts →" länk till `/blog`
 
-## 4. Databas (Supabase/Lovable Cloud)
-- Tabell för **verktyg** med fält: namn, beskrivning, URL, kategori
-- Alla verktyg hämtas från databasen, så du kan lägga till/redigera via Supabase utan kodändring
-- Befintliga verktyg migreras in i databasen
-
-## 5. Blogg-sektion
-- Visa senaste blogginlägg genom att hämta RSS-flödet från endpoint.rocks/feed/
-- Visar titel, datum och eventuell bild
-- "Läs mer"-länk till den fullständiga artikeln på WordPress
-
-## 6. Navigation & Footer
-- Sticky header med logotyp, navigation (Community Tools, Blogg) 
-- Footer med disclaimer-text och eventuella sociala länkar
+### Teknisk sammanfattning
+- Ny fil: `src/pages/Blog.tsx`
+- Ändrade filer: `App.tsx` (route), `Header.tsx` (navigation), `Footer.tsx` (länk), `HeroSection.tsx` (CTA), `BlogSection.tsx` (begränsa till 3 + länk)
 
