@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -35,6 +36,13 @@ const HeroSection = ({ searchQuery, onSearchChange }: HeroSectionProps) => {
             />
           </div>
         </div>
+
+        <Link
+          to="/blog"
+          className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+        >
+          📝 Read the latest blog posts →
+        </Link>
       </div>
     </section>
   );

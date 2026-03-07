@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 
@@ -12,7 +12,7 @@ const BlogSection = () => {
         .from("blog_posts")
         .select("id, title, slug, excerpt, image_url, published_at")
         .order("published_at", { ascending: false })
-        .limit(6);
+        .limit(3);
       if (error) throw error;
       return data;
     },
@@ -58,6 +58,17 @@ const BlogSection = () => {
           </div>
         ) : (
           <p className="text-muted-foreground">No blog posts available right now.</p>
+        )}
+
+        {posts && posts.length > 0 && (
+          <div className="mt-8 text-center">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              View all posts <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         )}
       </div>
     </section>
