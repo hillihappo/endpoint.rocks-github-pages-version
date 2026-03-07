@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, Github } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 
@@ -50,7 +50,7 @@ const HeroSection = ({ searchQuery, onSearchChange }: HeroSectionProps) => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
           >
-            🐙 GitHub →
+            <Github className="h-4 w-4" /> GitHub →
           </a>
         </div>
       </div>
