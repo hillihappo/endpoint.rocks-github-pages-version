@@ -4,20 +4,36 @@ import { Calendar, ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 
-const BlogSection = () => {
-  const { data: posts, isLoading } = useQuery({
+interface BlogSectionProps {
+  searchQuery?: string;
+}
+
+const BlogSection = ({ searchQuery = "" }: BlogSectionProps) => {
+  const isSearching = searchQuery.trim().length > 0;
+
+  const { data: allPosts, isLoading } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
         .select("id, title, slug, excerpt, image_url, published_at")
-        .order("published_at", { ascending: false })
-        .limit(3);
+        .order("published_at", { ascending: false });
       if (error) throw error;
       return data;
     },
     staleTime: 1000 * 60 * 10,
   });
+
+  const posts = allPosts?.filter((post) => {
+    if (!isSearching) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q)
+    );
+  });
+
+  const displayPosts = isSearching ? posts : posts?.slice(0, 3);
 
   return (
     <section id="blog" className="border-t border-border/50 py-16">
