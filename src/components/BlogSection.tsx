@@ -17,12 +17,20 @@ const BlogSection = ({ searchQuery = "", onResultCount }: BlogSectionProps) => {
   const { data: allPosts = [], isLoading, isError, error } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const sdkPromise = supabase
         .from("blog_posts")
         .select("id, title, slug, excerpt, image_url, published_at")
-        .order("published_at", { ascending: false });
-      if (error) throw error;
-      return data ?? [];
+        .order("published_at", { ascending: false })
+        .then(({ data, error }) => {
+          if (error) throw error;
+          return data ?? [];
+        });
+
+      try {
+        return await withTimeout(sdkPromise, 7000);
+      } catch {
+        return await fetchPublicRows<any>("blog_posts?select=id,title,slug,excerpt,image_url,published_at&order=published_at.desc");
+      }
     },
     staleTime: 1000 * 60 * 10,
     retry: 1,

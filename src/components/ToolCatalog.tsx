@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchPublicRows, withTimeout } from "@/lib/publicData";
+import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -24,9 +25,20 @@ const ToolCatalog = ({ searchQuery, selectedCategory, onCategoryChange, onResult
   const { data: tools = [], isLoading, isError, error } = useQuery({
     queryKey: ["tools"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("tools").select("*").order("name");
-      if (error) throw error;
-      return data ?? [];
+      const sdkPromise = supabase
+        .from("tools")
+        .select("*")
+        .order("name")
+        .then(({ data, error }) => {
+          if (error) throw error;
+          return data ?? [];
+        });
+
+      try {
+        return await withTimeout(sdkPromise, 7000);
+      } catch {
+        return await fetchPublicRows<any>("tools?select=*&order=name.asc");
+      }
     },
     retry: 1,
     refetchOnWindowFocus: false,
