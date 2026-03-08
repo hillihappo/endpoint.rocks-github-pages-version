@@ -40,7 +40,7 @@ const Auth = () => {
             <span className="text-foreground">.rocks</span>
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isLogin ? "Sign in to admin portal" : "Create an account"}
+            Sign in to admin portal
           </p>
         </div>
 
