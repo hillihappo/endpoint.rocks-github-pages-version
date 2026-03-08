@@ -50,7 +50,7 @@ const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0
               </button>
             )}
           </div>
-          {isSearching && (
+          {isSearching ? (
             <p className="mt-3 text-sm text-muted-foreground">
               Found <span className="font-medium text-foreground">{totalResults}</span> {totalResults === 1 ? "result" : "results"}
               {totalResults > 0 && (
