@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ToolCatalog from "@/components/ToolCatalog";
 import BlogSection from "@/components/BlogSection";
+import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -25,6 +26,7 @@ const Index = () => {
           blogCount={blogCount}
         />
         <BlogSection searchQuery={searchQuery} onResultCount={handleBlogCount} />
+        <AboutSection />
         <ToolCatalog
           searchQuery={searchQuery}
           selectedCategory={selectedCategory}
