@@ -216,25 +216,6 @@ const Admin = () => {
           <div className="flex items-center gap-3">
             <JsonImportButton />
             <span className="text-sm text-muted-foreground hidden sm:inline">{user?.email}</span>
-            <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" onClick={() => { setNewPassword(""); setConfirmPassword(""); }}>
-                  <KeyRound className="mr-1 h-4 w-4" /> Change Password
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-sm">
-                <DialogHeader>
-                  <DialogTitle>Change Password</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input type="password" placeholder="New password (min 8 characters)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                  <Input type="password" placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                  <Button className="w-full" onClick={handleChangePassword} disabled={changingPassword}>
-                    {changingPassword ? "Saving..." : "Save New Password"}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
             <Button variant="ghost" size="sm" onClick={signOut}>
               <LogOut className="mr-1 h-4 w-4" /> Sign Out
             </Button>
