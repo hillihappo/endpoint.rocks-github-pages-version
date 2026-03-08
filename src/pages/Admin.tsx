@@ -241,7 +241,7 @@ const Admin = () => {
             <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="sm" onClick={() => { setNewPassword(""); setConfirmPassword(""); }}>
-                  <KeyRound className="mr-1 h-4 w-4" /> Byt lösenord
+                  <KeyRound className="mr-1 h-4 w-4" /> Change Password
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-sm">
