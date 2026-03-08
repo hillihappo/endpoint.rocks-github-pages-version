@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,24 +22,11 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        toast.error(error.message);
-      } else {
-        navigate("/admin");
-      }
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      toast.error(error.message);
     } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: window.location.origin },
-      });
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Check your email for a confirmation link!");
-      }
+      navigate("/admin");
     }
     setLoading(false);
   };
@@ -54,7 +40,7 @@ const Auth = () => {
             <span className="text-foreground">.rocks</span>
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isLogin ? "Sign in to admin portal" : "Create an account"}
+            Sign in to admin portal
           </p>
         </div>
 
@@ -75,19 +61,9 @@ const Auth = () => {
             minLength={6}
           />
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Loading..." : isLogin ? "Sign In" : "Sign Up"}
+            {loading ? "Loading..." : "Sign In"}
           </Button>
         </form>
-
-        <p className="text-center text-sm text-muted-foreground">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-primary hover:underline"
-          >
-            {isLogin ? "Sign Up" : "Sign In"}
-          </button>
-        </p>
 
         <div className="text-center">
           <button
