@@ -192,11 +192,11 @@ const Admin = () => {
 
   const handleChangePassword = async () => {
     if (newPassword.length < 8) {
-      toast.error("Lösenordet måste vara minst 8 tecken");
+      toast.error("Password must be at least 8 characters");
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast.error("Lösenorden matchar inte");
+      toast.error("Passwords do not match");
       return;
     }
     setChangingPassword(true);
