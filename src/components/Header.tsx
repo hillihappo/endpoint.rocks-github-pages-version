@@ -38,6 +38,9 @@ const Header = () => {
           <button onClick={() => goToSection("tools")} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Community Tools
           </button>
+          <button onClick={() => goToSection("about")} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            About
+          </button>
           {isAdmin && (
             <Link to="/admin" className="text-sm text-primary transition-colors hover:text-primary/80 flex items-center gap-1">
               <Settings className="h-3.5 w-3.5" /> Admin
