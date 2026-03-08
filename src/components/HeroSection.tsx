@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Search, Github, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0 }: HeroSectionProps) => {
+  const [isFocused, setIsFocused] = useState(false);
   const isSearching = searchQuery.trim().length > 0;
   const totalResults = toolCount + blogCount;
 
@@ -37,6 +39,8 @@ const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0
               placeholder="Search tools and blog posts..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               onKeyDown={(e) => { if (e.key === "Escape") { onSearchChange(""); (e.target as HTMLInputElement).blur(); } }}
               className="h-12 rounded-xl border-border/50 bg-card pl-10 pr-10 text-base shadow-lg shadow-primary/5 placeholder:text-muted-foreground focus-visible:ring-primary"
             />
@@ -58,13 +62,15 @@ const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0
                   {" "}— {toolCount} {toolCount === 1 ? "tool" : "tools"}, {blogCount} {blogCount === 1 ? "post" : "posts"}
                 </span>
               )}
-              <span className="ml-2 text-muted-foreground/60">· Press Escape to clear</span>
+              {isFocused && (
+                <span className="ml-2 text-muted-foreground/60">· Press Escape to clear</span>
+              )}
             </p>
-          ) : (
+          ) : isFocused ? (
             <p className="mt-3 text-xs text-muted-foreground/40">
               Press <kbd className="rounded border border-border/50 px-1.5 py-0.5 font-mono text-[10px]">Esc</kbd> to clear
             </p>
-          )}
+          ) : null}
         </div>
 
         <Link
