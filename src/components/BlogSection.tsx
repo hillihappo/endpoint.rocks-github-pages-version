@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchPublicRows, withTimeout } from "@/lib/publicData";
 import { fetchPublicRows, withTimeout } from "@/lib/publicData";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,28 +14,47 @@ interface BlogSectionProps {
 const BlogSection = ({ searchQuery = "", onResultCount }: BlogSectionProps) => {
   const isSearching = searchQuery.trim().length > 0;
 
-  const { data: allPosts = [], isLoading, isError, error } = useQuery({
-    queryKey: ["blog-posts"],
-    queryFn: async () => {
-      const sdkPromise = supabase
-        .from("blog_posts")
-        .select("id, title, slug, excerpt, image_url, published_at")
-        .order("published_at", { ascending: false })
-        .then(({ data, error }) => {
-          if (error) throw error;
-          return data ?? [];
-        });
+  const [allPosts, setAllPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadPosts = async () => {
+      setIsLoading(true);
+      setErrorMessage(null);
 
       try {
-        return await withTimeout(Promise.resolve(sdkPromise), 7000);
-      } catch {
-        return await fetchPublicRows<any>("blog_posts?select=id,title,slug,excerpt,image_url,published_at&order=published_at.desc");
+        const sdkPromise = supabase
+          .from("blog_posts")
+          .select("id, title, slug, excerpt, image_url, published_at")
+          .order("published_at", { ascending: false })
+          .then(({ data, error }) => {
+            if (error) throw error;
+            return data ?? [];
+          });
+
+        let rows: any[];
+        try {
+          rows = await withTimeout(Promise.resolve(sdkPromise), 7000);
+        } catch {
+          rows = await fetchPublicRows<any>("blog_posts?select=id,title,slug,excerpt,image_url,published_at&order=published_at.desc");
+        }
+
+        if (active) setAllPosts(rows);
+      } catch (error) {
+        if (active) setErrorMessage(error instanceof Error ? error.message : "Unknown error");
+      } finally {
+        if (active) setIsLoading(false);
       }
-    },
-    staleTime: 1000 * 60 * 10,
-    retry: 1,
-    refetchOnWindowFocus: false,
-  });
+    };
+
+    loadPosts();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const posts = allPosts.filter((post) => {
     if (!isSearching) return true;
@@ -74,10 +93,9 @@ const BlogSection = ({ searchQuery = "", onResultCount }: BlogSectionProps) => {
               <Skeleton key={i} className="h-48 rounded-xl" />
             ))}
           </div>
-        ) : isError ? (
+        ) : errorMessage ? (
           <p className="text-muted-foreground">
-            Kunde inte hämta blogginlägg just nu. Ladda om sidan och försök igen.
-            {error instanceof Error ? ` (${error.message})` : ""}
+            Kunde inte hämta blogginlägg just nu. Ladda om sidan och försök igen. ({errorMessage})
           </p>
         ) : displayPosts.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
