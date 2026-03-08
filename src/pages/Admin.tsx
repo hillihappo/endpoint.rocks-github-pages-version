@@ -279,6 +279,7 @@ const Admin = () => {
               <div className="flex gap-2">
                 <JsonImportButton
                   label="Import Tools"
+                  dataKey="tools"
                   onImport={async (items) => {
                     const rows = items.map((t: any) => ({
                       name: t.name,
