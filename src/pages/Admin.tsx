@@ -190,29 +190,6 @@ const Admin = () => {
     }
   };
 
-  const handleChangePassword = async () => {
-    if (newPassword.length < 8) {
-      toast.error("Password must be at least 8 characters");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-    setChangingPassword(true);
-    try {
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) throw error;
-      toast.success("Password changed successfully!");
-      setPasswordDialogOpen(false);
-      setNewPassword("");
-      setConfirmPassword("");
-    } catch (e: any) {
-      toast.error(e.message);
-    } finally {
-      setChangingPassword(false);
-    }
-  };
 
   if (loading) return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Loading...</div>;
 
