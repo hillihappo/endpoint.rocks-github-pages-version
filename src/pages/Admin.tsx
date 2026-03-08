@@ -238,6 +238,7 @@ const Admin = () => {
             <span className="ml-2 rounded bg-primary/20 px-2 py-0.5 text-xs font-medium text-primary">Admin</span>
           </button>
           <div className="flex items-center gap-3">
+            <JsonImportButton />
             <span className="text-sm text-muted-foreground hidden sm:inline">{user?.email}</span>
             <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
               <DialogTrigger asChild>
@@ -277,22 +278,6 @@ const Admin = () => {
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold">Manage Tools</h2>
               <div className="flex gap-2">
-                <JsonImportButton
-                  label="Import Tools"
-                  dataKey="tools"
-                  onImport={async (items) => {
-                    const rows = items.map((t: any) => ({
-                      name: t.name,
-                      description: t.description,
-                      url: t.url,
-                      category: t.category,
-                    }));
-                    const { error } = await supabase.from("tools").insert(rows);
-                    if (error) throw error;
-                    queryClient.invalidateQueries({ queryKey: ["admin-tools"] });
-                    queryClient.invalidateQueries({ queryKey: ["tools"] });
-                  }}
-                />
               <Dialog open={toolDialogOpen} onOpenChange={setToolDialogOpen}>
                 <DialogTrigger asChild>
                   <Button onClick={() => { setToolForm(emptyToolForm); setToolEditId(null); setToolDialogOpen(true); }}>
@@ -365,24 +350,6 @@ const Admin = () => {
                 <Button variant="outline" onClick={syncFromRSS} disabled={syncing}>
                   <RefreshCw className={`mr-1 h-4 w-4 ${syncing ? "animate-spin" : ""}`} /> Sync from RSS
                 </Button>
-                <JsonImportButton
-                  label="Import Posts"
-                  dataKey="blog_posts"
-                  onImport={async (items) => {
-                    const rows = items.map((p: any) => ({
-                      title: p.title,
-                      slug: p.slug,
-                      content: p.content || "",
-                      excerpt: p.excerpt || "",
-                      image_url: p.image_url || null,
-                      published_at: p.published_at || null,
-                    }));
-                    const { error } = await supabase.from("blog_posts").insert(rows);
-                    if (error) throw error;
-                    queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
-                    queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
-                  }}
-                />
                 <Dialog open={blogDialogOpen} onOpenChange={setBlogDialogOpen}>
                   <DialogTrigger asChild>
                     <Button onClick={() => { setBlogForm(emptyBlogForm); setBlogEditId(null); setBlogDialogOpen(true); }}>
