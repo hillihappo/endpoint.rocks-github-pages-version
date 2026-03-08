@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Pencil, Trash2, Plus, LogOut, RefreshCw } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, RefreshCw, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import MarkdownEditor from "@/components/MarkdownEditor";
 
@@ -56,6 +56,10 @@ const Admin = () => {
   const [blogEditId, setBlogEditId] = useState<string | null>(null);
   const [blogDialogOpen, setBlogDialogOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
@@ -186,6 +190,30 @@ const Admin = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (newPassword.length < 8) {
+      toast.error("Lösenordet måste vara minst 8 tecken");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Lösenorden matchar inte");
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Lösenordet har ändrats!");
+      setPasswordDialogOpen(false);
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   if (loading) return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Loading...</div>;
 
   if (!isAdmin) {
@@ -210,6 +238,25 @@ const Admin = () => {
           </button>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground hidden sm:inline">{user?.email}</span>
+            <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="sm" onClick={() => { setNewPassword(""); setConfirmPassword(""); }}>
+                  <KeyRound className="mr-1 h-4 w-4" /> Byt lösenord
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>Byt lösenord</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input type="password" placeholder="Nytt lösenord (minst 8 tecken)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                  <Input type="password" placeholder="Bekräfta lösenord" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                  <Button className="w-full" onClick={handleChangePassword} disabled={changingPassword}>
+                    {changingPassword ? "Sparar..." : "Spara nytt lösenord"}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
             <Button variant="ghost" size="sm" onClick={signOut}>
               <LogOut className="mr-1 h-4 w-4" /> Sign Out
             </Button>
