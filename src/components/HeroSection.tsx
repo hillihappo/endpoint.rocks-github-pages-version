@@ -87,7 +87,11 @@ const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0
             <p className="mt-3 animate-fade-in text-xs text-muted-foreground/40">
               Press <kbd className="rounded border border-border/50 px-1.5 py-0.5 font-mono text-[10px]">Esc</kbd> to clear
             </p>
-          ) : null}
+          ) : (
+            <p className="mt-3 text-xs text-muted-foreground/30">
+              Press <kbd className="rounded border border-border/50 px-1.5 py-0.5 font-mono text-[10px]">/</kbd> or <kbd className="rounded border border-border/50 px-1.5 py-0.5 font-mono text-[10px]">⌘K</kbd> to search
+            </p>
+          )}
         </div>
 
         <Link
