@@ -15,6 +15,7 @@ import { Pencil, Trash2, Plus, LogOut, RefreshCw, KeyRound } from "lucide-react"
 import JsonImportButton from "@/components/JsonImportButton";
 import { toast } from "sonner";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import { isSafeUrl } from "@/lib/urlValidation";
 
 const CATEGORIES = [
   "Management Tools & Scripts",
