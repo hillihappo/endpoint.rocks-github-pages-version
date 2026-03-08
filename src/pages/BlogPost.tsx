@@ -125,10 +125,16 @@ const BlogPost = () => {
                 }}
               />
             )}
-            <div
-              className="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-img:rounded-xl"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
-            />
+            {post.content.trim().startsWith("<") ? (
+              <div
+                className="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-img:rounded-xl"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+              />
+            ) : (
+              <div className="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-img:rounded-xl">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+              </div>
+            )}
           </article>
         ) : (
           <p className="text-muted-foreground">Post not found.</p>

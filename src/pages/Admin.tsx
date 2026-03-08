@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pencil, Trash2, Plus, LogOut, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 const CATEGORIES = [
   "Management Tools & Scripts",
