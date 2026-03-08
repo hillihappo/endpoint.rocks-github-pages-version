@@ -32,6 +32,7 @@ const Index = () => {
           onCategoryChange={setSelectedCategory}
           onResultCount={handleToolCount}
         />
+        <AboutSection />
       </main>
       <Footer />
     </div>
