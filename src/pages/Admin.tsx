@@ -218,10 +218,10 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="tools">
+        <Tabs defaultValue="blog">
           <TabsList className="mb-6">
-            <TabsTrigger value="tools">Tools ({tools?.length ?? 0})</TabsTrigger>
             <TabsTrigger value="blog">Blog ({blogPosts?.length ?? 0})</TabsTrigger>
+            <TabsTrigger value="tools">Tools ({tools?.length ?? 0})</TabsTrigger>
           </TabsList>
 
           {/* TOOLS TAB */}
