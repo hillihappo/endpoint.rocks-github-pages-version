@@ -276,6 +276,22 @@ const Admin = () => {
           <TabsContent value="tools">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold">Manage Tools</h2>
+              <div className="flex gap-2">
+                <JsonImportButton
+                  label="Import Tools"
+                  onImport={async (items) => {
+                    const rows = items.map((t: any) => ({
+                      name: t.name,
+                      description: t.description,
+                      url: t.url,
+                      category: t.category,
+                    }));
+                    const { error } = await supabase.from("tools").insert(rows);
+                    if (error) throw error;
+                    queryClient.invalidateQueries({ queryKey: ["admin-tools"] });
+                    queryClient.invalidateQueries({ queryKey: ["tools"] });
+                  }}
+                />
               <Dialog open={toolDialogOpen} onOpenChange={setToolDialogOpen}>
                 <DialogTrigger asChild>
                   <Button onClick={() => { setToolForm(emptyToolForm); setToolEditId(null); setToolDialogOpen(true); }}>
