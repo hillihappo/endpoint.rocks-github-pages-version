@@ -19,7 +19,7 @@ const Index = () => {
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
         />
-        <BlogSection />
+        <BlogSection searchQuery={searchQuery} />
       </main>
       <Footer />
     </div>

@@ -4,20 +4,36 @@ import { Calendar, ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 
-const BlogSection = () => {
-  const { data: posts, isLoading } = useQuery({
+interface BlogSectionProps {
+  searchQuery?: string;
+}
+
+const BlogSection = ({ searchQuery = "" }: BlogSectionProps) => {
+  const isSearching = searchQuery.trim().length > 0;
+
+  const { data: allPosts, isLoading } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
         .select("id, title, slug, excerpt, image_url, published_at")
-        .order("published_at", { ascending: false })
-        .limit(3);
+        .order("published_at", { ascending: false });
       if (error) throw error;
       return data;
     },
     staleTime: 1000 * 60 * 10,
   });
+
+  const posts = allPosts?.filter((post) => {
+    if (!isSearching) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q)
+    );
+  });
+
+  const displayPosts = isSearching ? posts : posts?.slice(0, 3);
 
   return (
     <section id="blog" className="border-t border-border/50 py-16">
@@ -30,9 +46,9 @@ const BlogSection = () => {
               <Skeleton key={i} className="h-48 rounded-xl" />
             ))}
           </div>
-        ) : posts && posts.length > 0 ? (
+        ) : displayPosts && displayPosts.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post, index) => (
+            {displayPosts.map((post, index) => (
               <Link
                 key={post.id}
                 to={`/blog/${post.slug}`}
@@ -57,10 +73,12 @@ const BlogSection = () => {
             ))}
           </div>
         ) : (
-          <p className="text-muted-foreground">No blog posts available right now.</p>
+          <p className="text-muted-foreground">
+            {isSearching ? "No blog posts match your search." : "No blog posts available right now."}
+          </p>
         )}
 
-        {posts && posts.length > 0 && (
+        {!isSearching && posts && posts.length > 0 && (
           <div className="mt-8 text-center">
             <Link
               to="/blog"
