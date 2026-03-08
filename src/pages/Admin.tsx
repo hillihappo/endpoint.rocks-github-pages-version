@@ -192,18 +192,18 @@ const Admin = () => {
 
   const handleChangePassword = async () => {
     if (newPassword.length < 8) {
-      toast.error("Lösenordet måste vara minst 8 tecken");
+      toast.error("Password must be at least 8 characters");
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast.error("Lösenorden matchar inte");
+      toast.error("Passwords do not match");
       return;
     }
     setChangingPassword(true);
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
-      toast.success("Lösenordet har ändrats!");
+      toast.success("Password changed successfully!");
       setPasswordDialogOpen(false);
       setNewPassword("");
       setConfirmPassword("");
@@ -241,18 +241,18 @@ const Admin = () => {
             <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="sm" onClick={() => { setNewPassword(""); setConfirmPassword(""); }}>
-                  <KeyRound className="mr-1 h-4 w-4" /> Byt lösenord
+                  <KeyRound className="mr-1 h-4 w-4" /> Change Password
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
-                  <DialogTitle>Byt lösenord</DialogTitle>
+                  <DialogTitle>Change Password</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <Input type="password" placeholder="Nytt lösenord (minst 8 tecken)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                  <Input type="password" placeholder="Bekräfta lösenord" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                  <Input type="password" placeholder="New password (min 8 characters)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                  <Input type="password" placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                   <Button className="w-full" onClick={handleChangePassword} disabled={changingPassword}>
-                    {changingPassword ? "Sparar..." : "Spara nytt lösenord"}
+                    {changingPassword ? "Saving..." : "Save New Password"}
                   </Button>
                 </div>
               </DialogContent>
