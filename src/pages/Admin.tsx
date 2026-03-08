@@ -68,7 +68,7 @@ const Admin = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && isAdmin,
   });
 
   const saveToolMutation = useMutation({
@@ -116,7 +116,7 @@ const Admin = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && isAdmin,
   });
 
   const saveBlogMutation = useMutation({
