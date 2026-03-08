@@ -1,4 +1,4 @@
-import { Search, Github } from "lucide-react";
+import { Search, Github, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 
@@ -37,8 +37,17 @@ const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0
               placeholder="Search tools and blog posts..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="h-12 rounded-xl border-border/50 bg-card pl-10 text-base shadow-lg shadow-primary/5 placeholder:text-muted-foreground focus-visible:ring-primary"
+              className="h-12 rounded-xl border-border/50 bg-card pl-10 pr-10 text-base shadow-lg shadow-primary/5 placeholder:text-muted-foreground focus-visible:ring-primary"
             />
+            {isSearching && (
+              <button
+                onClick={() => onSearchChange("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
           {isSearching && (
             <p className="mt-3 text-sm text-muted-foreground">
