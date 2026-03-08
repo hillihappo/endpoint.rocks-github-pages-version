@@ -190,6 +190,30 @@ const Admin = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (newPassword.length < 8) {
+      toast.error("Lösenordet måste vara minst 8 tecken");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Lösenorden matchar inte");
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Lösenordet har ändrats!");
+      setPasswordDialogOpen(false);
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   if (loading) return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Loading...</div>;
 
   if (!isAdmin) {
