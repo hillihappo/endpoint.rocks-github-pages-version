@@ -16,6 +16,8 @@ function getCorsHeaders(req: Request) {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -62,7 +64,6 @@ serve(async (req) => {
     }
 
     if (migrate) {
-      // Authenticate the caller and verify admin role
       const authHeader = req.headers.get('Authorization');
       if (!authHeader) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -72,13 +73,12 @@ serve(async (req) => {
       }
 
       const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-      const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
       const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-      // Verify the user's JWT using the anon client
-      const anonClient = createClient(supabaseUrl, supabaseAnonKey);
+      // Use service role to verify user and check admin role
+      const adminClient = createClient(supabaseUrl, serviceKey);
       const token = authHeader.replace('Bearer ', '');
-      const { data: { user }, error: authError } = await anonClient.auth.getUser(token);
+      const { data: { user }, error: authError } = await adminClient.auth.getUser(token);
 
       if (authError || !user) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -87,8 +87,8 @@ serve(async (req) => {
         });
       }
 
-      // Check admin role
-      const { data: roleData } = await anonClient
+      // Check admin role using service role client (has_role is no longer callable by authenticated users)
+      const { data: roleData } = await adminClient
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id)
@@ -96,14 +96,11 @@ serve(async (req) => {
         .maybeSingle();
 
       if (!roleData) {
-        return new Response(JSON.stringify({ error: 'Forbidden: admin role required' }), {
+        return new Response(JSON.stringify({ error: 'Forbidden' }), {
           status: 403,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-
-      // Use service role client for the actual upsert
-      const supabase = createClient(supabaseUrl, serviceKey);
 
       const postsToInsert = items.map(item => ({
         title: item.title.replace(/&#(\d+);/g, (_, c) => String.fromCharCode(Number(c))),
@@ -114,7 +111,7 @@ serve(async (req) => {
         published_at: new Date(item.pubDate).toISOString(),
       }));
 
-      const { data, error } = await supabase
+      const { data, error } = await adminClient
         .from('blog_posts')
         .upsert(postsToInsert, { onConflict: 'slug' })
         .select();
@@ -126,12 +123,12 @@ serve(async (req) => {
       });
     }
 
-    // Normal mode: return simplified list
     return new Response(JSON.stringify(items.slice(0, 6).map(({ content, ...rest }) => rest)), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('RSS function error:', error);
+    const corsHeaders = getCorsHeaders(req);
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
