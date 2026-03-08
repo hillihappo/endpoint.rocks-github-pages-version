@@ -46,9 +46,9 @@ const BlogSection = ({ searchQuery = "" }: BlogSectionProps) => {
               <Skeleton key={i} className="h-48 rounded-xl" />
             ))}
           </div>
-        ) : posts && posts.length > 0 ? (
+        ) : displayPosts && displayPosts.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post, index) => (
+            {displayPosts.map((post, index) => (
               <Link
                 key={post.id}
                 to={`/blog/${post.slug}`}
@@ -73,10 +73,12 @@ const BlogSection = ({ searchQuery = "" }: BlogSectionProps) => {
             ))}
           </div>
         ) : (
-          <p className="text-muted-foreground">No blog posts available right now.</p>
+          <p className="text-muted-foreground">
+            {isSearching ? "No blog posts match your search." : "No blog posts available right now."}
+          </p>
         )}
 
-        {posts && posts.length > 0 && (
+        {!isSearching && posts && posts.length > 0 && (
           <div className="mt-8 text-center">
             <Link
               to="/blog"
