@@ -252,7 +252,7 @@ const Admin = () => {
                   <Input type="password" placeholder="New password (min 8 characters)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                   <Input type="password" placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                   <Button className="w-full" onClick={handleChangePassword} disabled={changingPassword}>
-                    {changingPassword ? "Sparar..." : "Spara nytt lösenord"}
+                    {changingPassword ? "Saving..." : "Save New Password"}
                   </Button>
                 </div>
               </DialogContent>
