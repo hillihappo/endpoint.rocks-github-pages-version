@@ -205,8 +205,7 @@ const Admin = () => {
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <button onClick={() => navigate("/")} className="flex items-center gap-2">
-            <span className="text-xl font-bold text-primary">Endpoint</span>
-            <span className="text-xl font-bold text-foreground">.rocks</span>
+            <span className="text-xl font-bold"><span className="text-primary">Endpoint</span><span className="text-foreground">.rocks</span></span>
             <span className="ml-2 rounded bg-primary/20 px-2 py-0.5 text-xs font-medium text-primary">Admin</span>
           </button>
           <div className="flex items-center gap-3">
