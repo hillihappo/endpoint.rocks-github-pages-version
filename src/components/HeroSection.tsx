@@ -58,6 +58,11 @@ const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0
                   {" "}— {toolCount} {toolCount === 1 ? "tool" : "tools"}, {blogCount} {blogCount === 1 ? "post" : "posts"}
                 </span>
               )}
+              <span className="ml-2 text-muted-foreground/60">· Press Escape to clear</span>
+            </p>
+          ) : (
+            <p className="mt-3 text-xs text-muted-foreground/40">
+              Press <kbd className="rounded border border-border/50 px-1.5 py-0.5 font-mono text-[10px]">Esc</kbd> to clear
             </p>
           )}
         </div>
