@@ -5,9 +5,14 @@ import { Link } from "react-router-dom";
 interface HeroSectionProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  toolCount?: number;
+  blogCount?: number;
 }
 
-const HeroSection = ({ searchQuery, onSearchChange }: HeroSectionProps) => {
+const HeroSection = ({ searchQuery, onSearchChange, toolCount = 0, blogCount = 0 }: HeroSectionProps) => {
+  const isSearching = searchQuery.trim().length > 0;
+  const totalResults = toolCount + blogCount;
+
   return (
     <section className="relative overflow-hidden py-20 md:py-32">
       {/* Glow effect */}
@@ -35,6 +40,16 @@ const HeroSection = ({ searchQuery, onSearchChange }: HeroSectionProps) => {
               className="h-12 rounded-xl border-border/50 bg-card pl-10 text-base shadow-lg shadow-primary/5 placeholder:text-muted-foreground focus-visible:ring-primary"
             />
           </div>
+          {isSearching && (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Found <span className="font-medium text-foreground">{totalResults}</span> {totalResults === 1 ? "result" : "results"}
+              {totalResults > 0 && (
+                <span className="text-muted-foreground">
+                  {" "}— {toolCount} {toolCount === 1 ? "tool" : "tools"}, {blogCount} {blogCount === 1 ? "post" : "posts"}
+                </span>
+              )}
+            </p>
+          )}
         </div>
 
         <Link
