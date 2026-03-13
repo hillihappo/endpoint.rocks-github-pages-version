@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import CookieConsent, { initGA, getConsent } from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -20,11 +21,14 @@ declare global {
   }
 }
 
+// Initialize GA on app load if consent was previously given
+initGA();
+
 const RouteChangeTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (window.gtag) {
+    if (getConsent() === "accepted" && window.gtag) {
       window.gtag("config", "G-ETF88872KS", {
         page_path: location.pathname + location.search,
       });
@@ -42,6 +46,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || "/"}>
           <RouteChangeTracker />
+          <CookieConsent />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
