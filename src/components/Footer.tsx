@@ -20,6 +20,7 @@ const Footer = () => {
           <Link to="/blog" className="transition-colors hover:text-foreground">Blog</Link>
           <button onClick={() => goToSection("tools")} className="transition-colors hover:text-foreground">Community Tools</button>
           <button onClick={() => goToSection("about")} className="transition-colors hover:text-foreground">About</button>
+          <button onClick={() => { localStorage.removeItem("cookie-consent"); window.location.reload(); }} className="transition-colors hover:text-foreground">Cookie Settings</button>
         </div>
         <p className="text-sm text-muted-foreground">
           Endpoint.rocks is not affiliated with Microsoft. All tools are community-created and maintained by their respective authors.

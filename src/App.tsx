@@ -46,6 +46,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || "/"}>
           <RouteChangeTracker />
+          <CookieConsent />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
