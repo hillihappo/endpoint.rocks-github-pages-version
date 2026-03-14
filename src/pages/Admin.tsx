@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pencil, Trash2, Plus, LogOut, RefreshCw } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import JsonImportButton from "@/components/JsonImportButton";
 import { toast } from "sonner";
 import MarkdownEditor from "@/components/MarkdownEditor";
@@ -361,10 +362,17 @@ const Admin = () => {
                 </TableHeader>
                 <TableBody>
                   {blogPosts?.map((post) => (
-                    <TableRow key={post.id}>
-                      <TableCell className="font-medium">{post.title}</TableCell>
+                    <TableRow key={post.id} className={!post.published_at ? "bg-muted/30" : ""}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {post.title}
+                          {!post.published_at && (
+                            <Badge variant="secondary" className="text-xs">Utkast</Badge>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
-                        {post.published_at ? new Date(post.published_at).toLocaleDateString("sv-SE") : "Draft"}
+                        {post.published_at ? new Date(post.published_at).toLocaleDateString("sv-SE") : "—"}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
