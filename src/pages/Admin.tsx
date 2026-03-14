@@ -318,9 +318,9 @@ const Admin = () => {
                     <DialogHeader>
                       <DialogTitle>{blogEditId ? "Edit Post" : "New Post"}</DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={(e) => { e.preventDefault(); const pub = { ...blogForm, published_at: blogForm.published_at || new Date().toISOString().slice(0, 16) }; saveBlogMutation.mutate(blogEditId ? { ...pub, id: blogEditId } : pub); }} className="space-y-4">
+                    <form onSubmit={(e) => { e.preventDefault(); const slug = blogForm.slug || blogForm.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `draft-${Date.now()}`; const pub = { ...blogForm, slug, published_at: blogForm.published_at || new Date().toISOString().slice(0, 16) }; saveBlogMutation.mutate(blogEditId ? { ...pub, id: blogEditId } : pub); }} className="space-y-4">
                       <Input placeholder="Title" value={blogForm.title} onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })} required />
-                      <Input placeholder="Slug (url-friendly)" value={blogForm.slug} onChange={(e) => setBlogForm({ ...blogForm, slug: e.target.value })} required />
+                      <Input placeholder="Slug (url-friendly, auto-generated if empty)" value={blogForm.slug} onChange={(e) => setBlogForm({ ...blogForm, slug: e.target.value })} />
                       <Input placeholder="Image URL (optional)" value={blogForm.image_url} onChange={(e) => setBlogForm({ ...blogForm, image_url: e.target.value })} />
                       <Textarea placeholder="Excerpt (short summary)" value={blogForm.excerpt} onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })} rows={2} />
                       <MarkdownEditor value={blogForm.content} onChange={(v) => setBlogForm({ ...blogForm, content: v })} />
@@ -335,7 +335,8 @@ const Admin = () => {
                           className="flex-1"
                           disabled={saveBlogMutation.isPending}
                           onClick={() => {
-                            const draft = { ...blogForm, published_at: "" };
+                            const slug = blogForm.slug || blogForm.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `draft-${Date.now()}`;
+                            const draft = { ...blogForm, slug, published_at: "" };
                             saveBlogMutation.mutate(blogEditId ? { ...draft, id: blogEditId } : draft);
                           }}
                         >
