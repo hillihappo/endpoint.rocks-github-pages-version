@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Pencil, Trash2, Plus, LogOut, RefreshCw } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import JsonImportButton from "@/components/JsonImportButton";
 import { toast } from "sonner";
@@ -59,7 +59,6 @@ const Admin = () => {
   const [blogForm, setBlogForm] = useState<BlogForm>(emptyBlogForm);
   const [blogEditId, setBlogEditId] = useState<string | null>(null);
   const [blogDialogOpen, setBlogDialogOpen] = useState(false);
-  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
@@ -166,30 +165,6 @@ const Admin = () => {
     },
     onError: (e: Error) => toast.error(e.message),
   });
-
-  const syncFromRSS = async () => {
-    setSyncing(true);
-    try {
-      // Get the user's session JWT for authenticated admin access
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      if (!currentSession?.access_token) {
-        throw new Error("You must be logged in to sync");
-      }
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/rss-feed?migrate=true`,
-        { headers: { Authorization: `Bearer ${currentSession.access_token}` } }
-      );
-      const result = await res.json();
-      if (result.error) throw new Error(result.error);
-      queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
-      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
-      toast.success(`Synced ${result.migrated} posts from RSS`);
-    } catch (e: any) {
-      toast.error(e.message);
-    } finally {
-      setSyncing(false);
-    }
-  };
 
 
   // Redirect non-admin users away from admin page
@@ -305,9 +280,6 @@ const Admin = () => {
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold">Manage Blog</h2>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={syncFromRSS} disabled={syncing}>
-                  <RefreshCw className={`mr-1 h-4 w-4 ${syncing ? "animate-spin" : ""}`} /> Sync from RSS
-                </Button>
                 <Dialog open={blogDialogOpen} onOpenChange={setBlogDialogOpen}>
                   <DialogTrigger asChild>
                     <Button onClick={() => { setBlogForm(emptyBlogForm); setBlogEditId(null); setBlogDialogOpen(true); }}>
