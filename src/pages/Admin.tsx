@@ -335,7 +335,8 @@ const Admin = () => {
                           className="flex-1"
                           disabled={saveBlogMutation.isPending}
                           onClick={() => {
-                            const draft = { ...blogForm, published_at: "" };
+                            const slug = blogForm.slug || blogForm.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `draft-${Date.now()}`;
+                            const draft = { ...blogForm, slug, published_at: "" };
                             saveBlogMutation.mutate(blogEditId ? { ...draft, id: blogEditId } : draft);
                           }}
                         >
