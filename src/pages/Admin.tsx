@@ -59,7 +59,6 @@ const Admin = () => {
   const [blogForm, setBlogForm] = useState<BlogForm>(emptyBlogForm);
   const [blogEditId, setBlogEditId] = useState<string | null>(null);
   const [blogDialogOpen, setBlogDialogOpen] = useState(false);
-  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
